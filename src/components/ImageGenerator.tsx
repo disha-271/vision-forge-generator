@@ -27,15 +27,15 @@ const ImageGenerator: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const { toast } = useToast();
-  
+
   // Hugging Face API token and model
-  const HF_TOKEN = "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";
+  const HF_TOKEN = import.meta.env.VITE_HF_TOKEN || "";
   const MODEL = "stabilityai/stable-diffusion-xl-base-1.0";
-  
+
   const handleStyleChange = (value: string) => {
     setSelectedStyle(value);
   };
-  
+
   const generateImage = async () => {
     if (!prompt.trim()) {
       toast({
@@ -45,19 +45,28 @@ const ImageGenerator: React.FC = () => {
       });
       return;
     }
-    
+
+    if (!HF_TOKEN) {
+      toast({
+        variant: "destructive",
+        title: "API Key Missing",
+        description: "Hugging Face API key is not configured"
+      });
+      return;
+    }
+
     setIsLoading(true);
     setImageUrl('');
-    
+
     try {
       // Combine prompt with style if selected
-      const fullPrompt = selectedStyle 
-        ? `${prompt.trim()}, ${selectedStyle} style` 
+      const fullPrompt = selectedStyle
+        ? `${prompt.trim()}, ${selectedStyle} style`
         : prompt.trim();
-        
+
       const imageUrl = await queryHuggingFace(fullPrompt);
       setImageUrl(imageUrl);
-      
+
       toast({
         title: "Image created successfully!",
         description: "Your AI-generated image is ready"
@@ -73,10 +82,10 @@ const ImageGenerator: React.FC = () => {
       setIsLoading(false);
     }
   };
-  
+
   const queryHuggingFace = async (prompt: string): Promise<string> => {
     const API_URL = `https://api-inference.huggingface.co/models/${MODEL}`;
-    
+
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -87,16 +96,16 @@ const ImageGenerator: React.FC = () => {
         inputs: prompt
       })
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || "API request failed");
     }
-    
+
     const imageBlob = await response.blob();
     return URL.createObjectURL(imageBlob);
   };
-  
+
   const handleTryAgain = () => {
     generateImage();
   };
@@ -111,13 +120,13 @@ const ImageGenerator: React.FC = () => {
           Transform your imagination into stunning visuals with AI
         </p>
       </div>
-      
+
       <div className="glass-card rounded-lg p-6 space-y-6 shadow-lg">
         <div className="space-y-4">
           <label htmlFor="prompt" className="block text-sm font-medium text-foreground">
             Describe your image
           </label>
-          <Textarea 
+          <Textarea
             id="prompt"
             placeholder="A futuristic cityscape with flying cars and neon lights..."
             value={prompt}
@@ -130,8 +139,8 @@ const ImageGenerator: React.FC = () => {
           <label className="block text-sm font-medium text-foreground">Choose a style</label>
           <ToggleGroup type="single" value={selectedStyle} onValueChange={handleStyleChange} className="flex flex-wrap gap-2">
             {styleOptions.map((style) => (
-              <ToggleGroupItem 
-                key={style.id} 
+              <ToggleGroupItem
+                key={style.id}
                 value={style.value}
                 className="rounded-md px-3 py-1.5 text-sm"
               >
@@ -169,8 +178,8 @@ const ImageGenerator: React.FC = () => {
       {imageUrl && (
         <div className="mt-8 space-y-4 animate-fade-in">
           <div className="image-container aspect-square sm:aspect-video">
-            <img 
-              src={imageUrl} 
+            <img
+              src={imageUrl}
               alt="AI generated image based on your description"
               className="w-full h-full object-cover rounded-lg shadow-lg"
             />

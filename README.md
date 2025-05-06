@@ -32,7 +32,11 @@ cd <YOUR_PROJECT_NAME>
 # Step 3: Install the necessary dependencies.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Set up environment variables
+cp .env.example .env
+# Edit the .env file and add your Hugging Face API token
+
+# Step 5: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 
@@ -59,6 +63,14 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+
+## API Keys
+
+This project uses the Hugging Face API for image generation. You'll need to:
+
+1. Get an API key from [Hugging Face](https://huggingface.co/settings/tokens)
+2. Create a `.env` file in the root directory (copy from `.env.example`)
+3. Add your API key to the `.env` file as `VITE_HF_TOKEN=your_api_key_here`
 
 ## How can I deploy this project?
 
