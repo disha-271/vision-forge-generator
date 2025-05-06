@@ -29,7 +29,7 @@ const ImageGenerator: React.FC = () => {
   const { toast } = useToast();
   
   // Hugging Face API token and model
-  const HF_TOKEN = "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";
+  const HF_TOKEN = "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";
   const MODEL = "stabilityai/stable-diffusion-xl-base-1.0";
   
   const handleStyleChange = (value: string) => {
