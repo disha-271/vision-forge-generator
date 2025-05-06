@@ -33,6 +33,11 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
     --radius: 0.75rem;
+    
+    /* Glow effect colors */
+    --glow-primary: 230 100% 67%;
+    --glow-secondary: 280 100% 60%;
+    --glow-accent: 330 100% 65%;
   }
 }
 
@@ -45,7 +50,7 @@
   }
   
   .glass-card {
-    @apply bg-background/80 backdrop-blur-sm border border-white/10;
+    @apply bg-background/80 backdrop-blur-sm border border-white/10 relative z-10;
   }
   
   .image-container {
@@ -60,5 +65,37 @@
   
   .image-container:hover::after {
     @apply opacity-100;
+  }
+  
+  /* Glow effect styles */
+  .glow-bg {
+    @apply absolute opacity-40 blur-[100px] rounded-full;
+    animation: pulse-glow 8s ease-in-out infinite alternate;
+  }
+  
+  .glow-primary {
+    @apply bg-[hsl(var(--glow-primary))];
+    animation-delay: 0s;
+  }
+  
+  .glow-secondary {
+    @apply bg-[hsl(var(--glow-secondary))];
+    animation-delay: -2s;
+  }
+  
+  .glow-accent {
+    @apply bg-[hsl(var(--glow-accent))];
+    animation-delay: -4s;
+  }
+  
+  @keyframes pulse-glow {
+    0% {
+      opacity: 0.2;
+      transform: scale(0.8) translate(5%, 5%);
+    }
+    100% {
+      opacity: 0.4;
+      transform: scale(1.1) translate(-5%, -5%);
+    }
   }
 }
